@@ -5,6 +5,11 @@
  */
 package sim_apotek;
 
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 /**
  *
  * @author Asep Kurniawan
@@ -16,6 +21,24 @@ public class flogin extends javax.swing.JFrame {
      */
     public flogin() {
         initComponents();
+        //load_table();
+    }
+    
+    private void load_table(){
+        try {
+            int no=1;
+            String sql = "select * from pegawai";
+            java.sql.Connection conn=(Connection)config.configDB();
+            java.sql.Statement stm=conn.createStatement();
+            java.sql.ResultSet res=stm.executeQuery(sql);
+            //if(res.next()){
+                
+                //model.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(6)});
+            //}
+            //jTable1.setModel(model);
+        } catch (Exception e) {
+        }
+        
     }
 
     /**
@@ -44,6 +67,11 @@ public class flogin extends javax.swing.JFrame {
         });
 
         jButton2.setText("Keluar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Password");
 
@@ -97,7 +125,32 @@ public class flogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        try {
+            String sql = "SELECT * FROM pegawai WHERE id_pegawai ='"+jTextField1.getText()+"'AND nama ='"+String.valueOf(jPasswordField1.getPassword())+"'";
+            java.sql.Connection conn=(Connection)config.configDB();
+            java.sql.Statement stm=conn.createStatement();
+            java.sql.ResultSet res=stm.executeQuery(sql);
+            if (res.next()){
+                if(jTextField1.getText().equals(res.getString("id_pegawai")) && String.valueOf(jPasswordField1.getPassword()).equals(res.getString("nama"))){
+                    JOptionPane.showMessageDialog(null, "Login Berhasil");
+                    this.setVisible(false);
+                    new stokobat().setVisible(true);
+                }
+                
+            }else{
+               JOptionPane.showMessageDialog(null, "Login Gagal"); 
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        //dispose();
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
